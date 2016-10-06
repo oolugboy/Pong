@@ -9,9 +9,15 @@
 #include "Shader.h"
 #include <iostream>
 #include <string>
+#include <cmath>
 
 using namespace std;
 /** We are using SDL2 to create the window **/
+int TOPWALL = 1, BOTTOMWALL = 2, LEFTWALL= 3, RIGHTWALL = 4;
+double leftPaddleY = 0, rightPaddleY = 0;
+double ballX = 0, ballY = 0, incX = 0.02, incY = 0.02;
+bool goLeft = false, goRight = true;
+Transform transform1, transform2, transform3;
 
 /** need arguments to specify the dimensions of the window **/
 Display::Display(int height, int width, const string & title)
@@ -58,22 +64,25 @@ Display::~Display()
     SDL_Quit();
     //dtor
 }
-double leftPaddleY = 0, rightPaddleY = 0, ballX = 0, ballY = 0;
-bool goLeft = false, goRight = true;
-void Display::updatePosition(Shader & shader, Mesh & leftP, Mesh & rightP, Mesh & ball)
+
+void Display::updatePosition(Shader & shader, GameObject & leftP, GameObject & rightP, GameObject & ball)
 {
-	Transform transform1, transform2, transform3;
 	transform1.getPos().y = leftPaddleY;
 	shader.UpdateLeftPaddle(transform1);
-	leftP.draw();
+	leftP.getMesh().draw();
+
 
 	transform2.getPos().y = rightPaddleY;
 	shader.UpdateRightPaddle(transform2);
-	rightP.draw();
+	rightP.getMesh().draw();
 
+//	cout << " The x " << ballX << " and the y " << ballY << endl;
 	transform3.getPos().x = ballX;
+	transform3.getPos().y = ballY;
 	shader.UpdateBall(transform3);
-	ball.draw();
+	ball.getMesh().draw();
+
+	handleCollision(doesCollide());
 
 	if(transform3.getPos().x > 0.95)
 	{
@@ -86,15 +95,45 @@ void Display::updatePosition(Shader & shader, Mesh & leftP, Mesh & rightP, Mesh 
 		goRight = true;
 	}
 }
+int Display::doesCollide()
+{
+	if(transform3.getPos().x > 0.95)
+		return RIGHTWALL;
+	else if(transform3.getPos().x < -0.95)
+		return LEFTWALL;
+	else if(transform3.getPos().y > 0.075)
+		return TOPWALL;
+	else if(transform3.getPos().y < -1.875)
+		return BOTTOMWALL;
+	else
+		return 0;
+}
+void Display::handleCollision(int type)
+{
+	double vX = transform3.getPos().x, vY = transform3.getPos().y;
 
+	/** First scale down to our Pseudo unit vectors **/
+	double mag = sqrt(pow(vX, 2) + pow(vY, 2));
+	vX = (vX * 0.02)/mag;
+	vY = (vY * 0.02)/mag;
+
+	if(type == LEFTWALL || type == RIGHTWALL)
+	{
+		incX = vX * -1;
+		cout << " The new incX is " << incX << endl;
+	}
+	if(type == TOPWALL || type == BOTTOMWALL)
+	{
+		incY = vY * -1;
+		cout << " The new incY is " << incY << endl;
+	}
+}
 void Display::update()
 {
 	SDL_GL_SwapWindow(currWind);
-	/** The ball has to constantly be in motion **/
-	if(goLeft)
-		ballX -= 0.01;
-	else
-		ballX += 0.01;
+
+	ballX += incX;
+	ballY += incY;
 
 	/** receive and handle all the events that the operating system throws **/
 	SDL_Event e;

@@ -49,9 +49,12 @@ int main()
 	/** The indices for the ball **/
 	unsigned int  indices3[] = {0,2,3,0,3,1};
 
-	Mesh leftP = Mesh(leftPaddle, 10, indices, 24);
-	Mesh rightP = Mesh(rightPaddle, 10, indices2, 24);
-	Mesh ball = Mesh(ballVertices, 4, indices3, 6);
+	Mesh leftPaddleMesh = Mesh(leftPaddle, 10, indices, 24);
+	GameObject leftP = GameObject(leftPaddleMesh);
+	Mesh rightPaddleMesh = Mesh(rightPaddle, 10, indices2, 24);
+	GameObject rightP = GameObject(rightPaddleMesh);
+	Mesh ballMesh = Mesh(ballVertices, 4, indices3, 6);
+	GameObject ball = GameObject(ballMesh);
 
 
     Shader shader("./res/basicShader");

@@ -74,7 +74,7 @@ void Shader::Bind()
 
 void Shader::UpdateLeftPaddle(const Transform & transform1)
 {
-	cout << " Updating left " << endl;
+	//cout << " Updating left " << endl;
 	glm::mat4 model1 = transform1.getModel();
 	glUniformMatrix4fv(uniforms[LEFT_PADDLE],1,GL_FALSE,&(model1[0][0]));
 	glUniform1f(uniforms[LEFT_BOOL], true);
@@ -83,7 +83,7 @@ void Shader::UpdateLeftPaddle(const Transform & transform1)
 }
 void Shader::UpdateRightPaddle(const Transform & transform2)
 {
-	cout << " Updating right " << endl;
+//	cout << " Updating right " << endl;
 	glm::mat4 model2 = transform2.getModel();
 	glUniformMatrix4fv(uniforms[RIGHT_PADDLE],1,GL_FALSE, &(model2[0][0]));
 	glUniform1f(uniforms[LEFT_BOOL], false);

@@ -19,8 +19,11 @@
 #include <SDL2/SDL_keyboard.h>
 #include <GL/glew.h>
 #include "mesh.h"
+#include "Transform.h"
 
 using namespace std;
+
+
 
 
 class Display
@@ -31,8 +34,11 @@ class Display
         void update();
         void update(Shader shader);
         bool getClosed();
-        void updatePosition(Shader & shader, Mesh & leftP, Mesh & rightP, Mesh & ball);
+        void updatePosition(Shader & shader, GameObject & leftP,
+        		GameObject & rightP, GameObject & ball);
         void clear(float r, float g, float b, float a);
+        int doesCollide();
+        void handleCollision(int type);
 
     protected:
     private:

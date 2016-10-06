@@ -77,7 +77,7 @@ class Mesh
 class GameObject
 {
 public:
-	GameObject(Mesh mesh)
+	GameObject(Mesh & mesh)
 	{
 		this->mesh = mesh;
 		this->velocityX = 0;

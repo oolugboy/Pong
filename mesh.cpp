@@ -25,7 +25,7 @@ Mesh::Mesh(const string & fileName)
 Mesh::Mesh(Vertex * vertices, unsigned int numVertices, unsigned int * indices,
 		unsigned int numIndices)
 {
-	IndexedModel model;
+	IndexedModel model;/** This model is affecting how this is being drawn **/
 	for(unsigned int i = 0; i < numVertices; i++)
 	{
 		model.positions.push_back(vertices[i].getPos());
